@@ -13,11 +13,6 @@ env/
 # Streamlit
 .streamlit/
 
-# Build Python
-dist/
-build/
-*.egg-info/
-
 # Node / React
 node_modules/
 npm-debug.log*
