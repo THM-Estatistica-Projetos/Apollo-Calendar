@@ -3,20 +3,20 @@ import { Fragment, useEffect, useState } from "react";
 
 import { useMemo } from "react";
 
-function ModalAdicionar({
-    setIsAdicionarModalOpen,
-    isAdicionarModalOpen
+function ModalEditar({
+    setIsEditarModalOpen,
+    isEditarModalOpen
 }) {
     return (
         <>
-            <Transition appear show={isAdicionarModalOpen} as={Fragment}>
-                <Dialog as="div" className="relative z-50" onClose={() => setIsAdicionarModalOpen(false)}>
+            <Transition appear show={isEditarModalOpen} as={Fragment}>
+                <Dialog as="div" className="relative z-50" onClose={() => setIsEditarModalOpen(false)}>
                     <div className="fixed inset-0" aria-hidden="true" />
                     <div className="fixed inset-0 flex justify-center mt-20 p-4 bg-gradient-to-t from-slate-500 to-transparent rounded-xl">
                         <Dialog.Panel className="w-full max-w-[800px] overflow-y-hidden transform rounded-2xl bg-white py-5 px shadow-2xl transition-all scroll-m-0 h-fit mt-7">
                             <div className="w-full px-5">
                                 <h1 className="text-2xl font-semibold text-gray-700">
-                                    Adicionar novo agendamento ou locação
+                                    Editar agendamento ou locação
                                 </h1>
 
                                 <div className="w-full border border-b-slate-800 my-4" />

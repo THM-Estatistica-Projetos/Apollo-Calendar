@@ -66,9 +66,9 @@ function ApolloCalendar({ args }) {
             )}
 
             <div className="flex gap-4 w-full">
-                <button className="w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 border-slate-200" onClick={() => setIsAdicionarModalOpen(true)}>Adicionar Consulta</button>
-                <button className="w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 border-slate-200">Remover Consulta</button>
-                <button className="w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 border-slate-200">Editar Consulta</button>
+                <button className="w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 focus:outline-none border-slate-200" onClick={() => setIsAdicionarModalOpen(true)}>Adicionar Consulta</button>
+                <button className="w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 focus:outline-none border-slate-200">Remover Consulta</button>
+                <button className="w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 focus:outline-none border-slate-200">Editar Consulta</button>
             </div>
 
             <div className="w-full overflow-x-auto bg-white rounded-xl shadow-sm border border-slate-200">
