@@ -1,30 +1,23 @@
-import streamlit.components.v1 as components
-
-import requests
-import streamlit as st
 import os
-from dotenv import load_dotenv
-from datetime import datetime, timedelta
-from numpy import random
 from pathlib import Path
 import streamlit.components.v1 as components
 
 _RELEASE = True
 
-import pandas as pd
-
-# Main component
-if _RELEASE == False:
+if not _RELEASE:
     _apollo_calendar = components.declare_component(
         "apollo_calendar",
-        url="http://localhost:3001"
+        url="http://localhost:3001",
     )
-else: 
-    _component_path = Path(__file__).parent / "frontend" / "build"
+else:
+    build_dir = Path(__file__).parent / "frontend" / "build"
+
+    if not build_dir.exists():
+        raise RuntimeError(f"Build directory not found: {build_dir}")
 
     _apollo_calendar = components.declare_component(
         "apollo_calendar",
-        path=str(_component_path)
+        path=str(build_dir),
     )
 
 def apollo_calendar(items, columns, time_slots=None, config=None, key=None):
