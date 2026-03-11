@@ -22,12 +22,12 @@ function ModalAdicionar({
                                 <div>
                                     <form className="flex flex-col gap-5 mt-10">
                                         <div className="flex gap-1 flex-col">
-                                            <span>Título</span>
-                                            <input type="text" placeholder="Paciente" className="w-full h-3 rounded focus:outline-none p-2"></input>
+                                            <span className="text-xl text-gray-900">Título</span>
+                                            <input type="text" placeholder="Paciente" className="ml-3 w-full h-3 rounded focus:outline-none p-2 bg-slate-100"></input>
                                         </div>
                                         <div className="flex gap-1 flex-col">
                                             <span>Profissional</span>
-                                            <input type="text" placeholder="Profissional" className="w-full h-3 rounded focus:outline-none p-2"></input>
+                                            <input type="text" placeholder="Profissional" className="ml-3 w-full h-3 rounded focus:outline-none p-2 bg-slate-100"></input>
                                         </div>
                                         <button>Adicionar</button>
                                     </form>
