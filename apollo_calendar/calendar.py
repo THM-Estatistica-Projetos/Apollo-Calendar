@@ -4,7 +4,7 @@ import streamlit.components.v1 as components
 
 _RELEASE = True
 
-if not _RELEASE:
+if _RELEASE == False:
     _apollo_calendar = components.declare_component(
         "apollo_calendar",
         url="http://localhost:3001",

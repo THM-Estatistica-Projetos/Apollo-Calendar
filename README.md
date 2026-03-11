@@ -45,5 +45,6 @@ apollo_calendar(
 ### Reinstall the component for updates
 
 ```sh
-pip install --force-reinstall git+https://github.com/THM-Estatistica-Projetos/Apollo-Calendar.git
+pip uninstall apollo_calendar -y
+pip install --no-cache-dir git+https://github.com/THM-Estatistica-Projetos/Apollo-Calendar.git
 ```
