@@ -1,5 +1,5 @@
 import { Checkbox, Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 
 import { Streamlit } from "streamlit-component-lib";
 
@@ -13,7 +13,7 @@ function ModalAdicionar({
 
     const hoje = new Date().toISOString().split("T")[0]
 
-    const [formData, setFormData] = useState({
+    const initialFormData = {
         operacao: "Add",
         paciente: "",
         profissional: "",
@@ -22,7 +22,9 @@ function ModalAdicionar({
         fim: "",
         data: hoje,
         status: "Agendado"
-    })
+    }
+
+    const [formData, setFormData] = useState(initialFormData)
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -32,6 +34,12 @@ function ModalAdicionar({
             [name]: value
         }))
     }
+
+    useEffect(() => {
+        if (isAdicionarModalOpen) {
+            setFormData(initialFormData)
+        }
+    }, [isAdicionarModalOpen])
 
     const handleSubmit = (e) => {
         e.preventDefault()
