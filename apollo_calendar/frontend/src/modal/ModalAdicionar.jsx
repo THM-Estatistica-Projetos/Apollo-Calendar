@@ -11,7 +11,7 @@ function ModalAdicionar({
     columns
 }) {
 
-    const hoje = new Date().toISOString().split("T")[0]
+    const hoje = new Date().toLocaleDateString("sv-SE")
 
     const initialFormData = {
         operacao: "Add",
