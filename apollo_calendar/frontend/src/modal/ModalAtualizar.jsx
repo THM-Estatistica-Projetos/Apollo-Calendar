@@ -13,8 +13,7 @@ function ModalAtualizar({
     item,
     patients,
     professionals,
-    columns,
-    paciente_apollo_default = false
+    columns
 }) {
 
     const handleSubmit = () => {
@@ -48,7 +47,7 @@ function ModalAtualizar({
         inicio: "",
         fim: "",
         status: "",
-        paciente_apollo: paciente_apollo_default
+        paciente_apollo: ""
     })
 
     useEffect(() => {
@@ -67,10 +66,13 @@ function ModalAtualizar({
                 inicio: item.startTime.slice(11, 16),
                 fim: item.endTime.slice(11, 16),
                 status: item.status || "",
-                paciente_apollo: item.paciente_apollo ?? paciente_apollo_default
+                paciente_apollo: item.paciente_apollo || false
             })
+
+            // console.log("Form data:", formData)
+            // console.log("Item data:", item)
         }
-    }, [item, isAtualizarModalOpen, paciente_apollo_default, patients, professionals])
+    }, [item, isAtualizarModalOpen, patients, professionals])
 
     const handleChange = (e) => {
         const { name, value } = e.target

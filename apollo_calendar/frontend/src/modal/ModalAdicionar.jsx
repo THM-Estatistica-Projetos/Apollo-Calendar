@@ -8,8 +8,7 @@ function ModalAdicionar({
     isAdicionarModalOpen,
     patients,
     professionals,
-    columns,
-    paciente_apollo_default = false
+    columns
 }) {
 
     const hoje = new Date().toLocaleDateString("sv-SE")
@@ -23,7 +22,7 @@ function ModalAdicionar({
         fim: "",
         data: hoje,
         status: "Agendado",
-        paciente_apollo: paciente_apollo_default
+        paciente_apollo: false
     }
 
     const [formData, setFormData] = useState(initialFormData)

@@ -13,7 +13,6 @@ function CalendarioAdmin({ args }) {
         professionals = [],
         columns = [], // Slots
         timeSlots = [], // Horários
-        paciente_apollo = false,
         config = {
             primaryKey: 'id',
             columnKey: 'columnId',
@@ -134,7 +133,6 @@ function CalendarioAdmin({ args }) {
                 patients={patients}
                 professionals={professionals}
                 columns={columns}
-                paciente_apollo_default={paciente_apollo}
             />
             <ModalAtualizar
                 setIsAtualizarModalOpen={setIsAtualizarModalOpen}
@@ -143,7 +141,6 @@ function CalendarioAdmin({ args }) {
                 patients={patients}
                 professionals={professionals}
                 columns={columns}
-                paciente_apollo_default={paciente_apollo}
             />
         </div>
     )
