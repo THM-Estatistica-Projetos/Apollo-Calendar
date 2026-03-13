@@ -195,6 +195,9 @@ const EventCard = ({ item, isMinimalist, config, onClickEvent }) => {
                     {item.subtitle}
                 </div>
             )}
+            <div className="text-[10px] text-slate-500 italic truncate">
+                {item.paciente_apollo ? 'Apollo' : 'Particular'}
+            </div>
         </div>
     )
 }
