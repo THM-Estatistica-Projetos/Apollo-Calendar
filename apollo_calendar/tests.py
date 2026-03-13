@@ -52,7 +52,7 @@ data_str = st.session_state.data.strftime("%Y-%m-%d")
 
 st.set_page_config(layout="wide")
 
-def apollo_calendar(items, patients, professionals, columns, time_slots=None, config=None, key=None, acesso=""):
+def apollo_calendar(items, patients, professionals, columns, time_slots=None, config=None, key=None, acesso="", paciente_apollo=False):
     """
     items: Lista de dicionários formatados
     columns: Lista de strings ou dicts [{"id": "C1", "title": "Consultório 1"}]
@@ -70,7 +70,8 @@ def apollo_calendar(items, patients, professionals, columns, time_slots=None, co
         timeSlots=time_slots,
         config=config,
         key=key,
-        acesso=acesso
+        acesso=acesso,
+        paciente_apollo=paciente_apollo
     )
     
 def format_data_for_calendar(raw_data):
@@ -89,7 +90,8 @@ def format_data_for_calendar(raw_data):
             "endTime": item.get("fim"),      # ISO String
             "columnId": str(item.get("slot", {}).get("id_slot")),
             "color": paciente.get("cor", "#3788d8"),
-            "status": "Presente"
+            "status": "Presente",
+            "paciente_apollo": item.get("paciente_apollo", False)
         })
     return formatted
 
@@ -133,6 +135,7 @@ db_fake_raw = [
         "inicio": f"{st.session_state.data.strftime('%Y-%m-%d')}T09:00:00.000Z",
         "fim": f"{st.session_state.data.strftime('%Y-%m-%d')}T11:00:00.000Z",
         "slot": {"id_slot": 1},
+        "paciente_apollo": True,
         "paciente": {"nome": "João Silva", "cor": "#2196F3"},
         "profissional": {"usuario": {"nome": "Sei la"}},
     },
@@ -141,6 +144,7 @@ db_fake_raw = [
         "inicio": f"{st.session_state.data.strftime('%Y-%m-%d')}T08:30:00.000Z",
         "fim": f"{st.session_state.data.strftime('%Y-%m-%d')}T09:30:00.000Z",
         "slot": {"id_slot": 2},
+        "paciente_apollo": False,
         "paciente": {"nome": "Maria Oliveira", "cor": "#2196F3"},
         "profissional": {"usuario": {"nome": "Dr. Carlos"}}
     },
@@ -195,6 +199,8 @@ for i in range(7):
         "date": d.strftime("%Y-%m-%d"),
         "label": f"{dias[i]} {d.day}"
     })
+
+paciente_apollo_default = st.toggle("Paciente Apollo padrao?", value=False)
     
 st.write(headers_medico)
 resultado = apollo_calendar(
@@ -211,7 +217,8 @@ resultado = apollo_calendar(
         "showToggle": True
     },
     key="1",
-    acesso="Medico"
+    acesso="Medico",
+    paciente_apollo=paciente_apollo_default
 )
 
 resultado = apollo_calendar(
@@ -228,7 +235,8 @@ resultado = apollo_calendar(
         "showToggle": True
     },
     key="2",
-    acesso="Admin"
+    acesso="Admin",
+    paciente_apollo=paciente_apollo_default
 )
 
 

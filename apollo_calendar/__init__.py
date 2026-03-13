@@ -1,1 +1,1 @@
-from .calendar import apollo_calendar
+from .calendar_apollo import apollo_calendar
