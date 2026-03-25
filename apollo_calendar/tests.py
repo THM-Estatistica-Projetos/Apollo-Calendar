@@ -205,22 +205,22 @@ for i in range(7):
 
 paciente_apollo_default = st.toggle("Paciente Apollo padrao?", value=False)
 
-resultado = apollo_calendar(
-    items=items, 
-    patients=patients,
-    professionals=professionals,
-    columns=headers_medico,
-    config={
-        "primaryKey": "id",
-        "columnKey": "columnId",
-        "timeKey": "startTime",
-        "endTime": "endTime",
-        "colorKey": "color",
-        "showToggle": True
-    },
-    key="1",
-    acesso="Medico"
-)
+#resultado = apollo_calendar(
+#    items=items, 
+#    patients=patients,
+#    professionals=professionals,
+#    columns=headers_medico,
+#    config={
+#        "primaryKey": "id",
+#        "columnKey": "columnId",
+#        "timeKey": "startTime",
+#        "endTime": "endTime",
+#        "colorKey": "color",
+#        "showToggle": True
+#    },
+#    key="1",
+#    acesso="Medico"
+#)
 
 resultado = apollo_calendar(
     items=items, 

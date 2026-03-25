@@ -250,19 +250,19 @@ const EventCard = ({ item, isMinimalist, config, onClickEvent }) => {
             {isExpanded ? (
                 <div style={styleHover} className={`absolute rounded w-full translate-y-[${offset}px] p-2`}>
                     <div className="flex justify-between w-full">
-                        <div className="text-[10px] font-bold text-white mb-1">
+                        <div className={`text-[10px] font-bold ${isMinimalist ? "text-slate-500" : "text-white" } mb-1`}>
                             {formatTime(item[config.timeKey])} - {formatTime(item[config.endTime])}
                         </div>
                     </div>
-                    <div className="text-xs font-semibold text-white line-clamp-1">
+                    <div className={`text-xs font-semibold ${isMinimalist ? "text-slate-500" : "text-white" } line-clamp-1`}>
                         {item.title || "Sem título"}
                     </div>
                     {item.subtitle && (
-                        <div className="text-[10px] text-white italic truncate">
+                        <div className={`text-[10px] ${isMinimalist ? "text-slate-500" : "text-white" } italic truncate`}>
                             {item.subtitle}
                         </div>
                     )}
-                    <div className="text-[10px] text-white italic truncate">
+                    <div className={`text-[10px] ${isMinimalist ? "text-slate-500" : "text-white" } italic truncate`}>
                         {item.paciente_apollo ? 'Apollo' : 'Particular'}
                     </div>
                 </div>
