@@ -13,7 +13,16 @@ function ModalAdicionar({
 
     const hoje = new Date().toLocaleDateString("sv-SE")
 
-    const initialFormData = {
+    const [isLocacao, setIsLocacao] = useState(null)
+
+    useEffect(() => {
+        if (isAdicionarModalOpen) {
+            setIsLocacao(null)
+        }
+    }, [isAdicionarModalOpen])
+
+    const initialAgendamentoFormData = {
+        tipo: "agendamento",
         operacao: "Add",
         paciente: "",
         profissional: "",
@@ -26,14 +35,39 @@ function ModalAdicionar({
         em_lote: false,
     }
 
-    const [formData, setFormData] = useState(initialFormData)
+    const initialLocacaoFormData = {
+        tipo: "locacao",
+        operacao: "Add",
+        profissional: "",
+        slot: "",
+        tipo_aluguel: "",
+        recorrencia: null,
+        data_locacao: hoje,
+        inicio: "",
+        fim: "",
+        em_lote: false,
+    }
 
-    const handleChange = (e) => {
+    const [agendamentoFormData, setAgendamentoFormData] = useState(initialAgendamentoFormData)
+    const [locacaoFormData, setLocacaoFormData] = useState(initialLocacaoFormData)
+
+    const handleChangeAgendamento = (e) => {
         const { name, value } = e.target
 
         const parsedValue = name === "paciente_apollo" || name === "em_lote" ? value === "true" : value;
 
-        setFormData((prev) => ({
+        setAgendamentoFormData((prev) => ({
+            ...prev,
+            [name]: parsedValue
+        }))
+    }
+
+    const handleChangeLocacao = (e) => {
+        const { name, value } = e.target
+
+        const parsedValue = name === "em_lote" ? value === "true" : value;
+
+        setLocacaoFormData((prev) => ({
             ...prev,
             [name]: parsedValue
         }))
@@ -41,7 +75,8 @@ function ModalAdicionar({
 
     useEffect(() => {
         if (isAdicionarModalOpen) {
-            setFormData(initialFormData)
+            setAgendamentoFormData(initialAgendamentoFormData)
+            setLocacaoFormData(initialLocacaoFormData)
         }
     }, [isAdicionarModalOpen])
 
@@ -49,7 +84,11 @@ function ModalAdicionar({
         e.preventDefault()
         setIsAdicionarModalOpen(false)
 
-        Streamlit.setComponentValue(formData)
+        if(isLocacao){
+            Streamlit.setComponentValue(locacaoFormData)
+        }else{
+            Streamlit.setComponentValue(agendamentoFormData)
+        }
     }
 
     return (
@@ -61,177 +100,279 @@ function ModalAdicionar({
                         <Dialog.Panel className="w-full max-w-[800px] overflow-y-hidden transform rounded-2xl bg-white py-5 px shadow-2xl transition-all scroll-m-0 h-fit mt-7">
                             <div className="w-full px-5">
                                 <h1 className="text-2xl font-semibold text-gray-700">
-                                    Adicionar novo agendamento ou locação
+                                    {isLocacao == null ? "Adicionar novo agendamento ou locação" : isLocacao == true ? "Adicionar nova locação" : "Adicionar novo agendamento"}
                                 </h1>
 
                                 <div className="w-full border border-b-slate-800 my-4" />
-                                <div>
-                                    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                                        <div className="flex gap-1 flex-col">
-                                            <span className="text-xl text-gray-600 font-medium">Paciente</span>
-                                            <select
-                                                name="paciente"
-                                                value={formData.paciente}
-                                                onChange={handleChange}
-                                                className="ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3"
-                                            >
-                                                <option value="">Selecione um paciente</option>
-                                                {patients.map((patient) => (
-                                                    <option key={patient.id_paciente} value={patient.id_paciente}>{patient.nome}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="flex gap-1 flex-col">
-                                            <span className="text-xl text-gray-600 font-medium">Profissional</span>
-                                            <select
-                                                name="profissional"
-                                                value={formData.profissional}
-                                                onChange={handleChange}
-                                                className="ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3"
-                                            >
-                                                <option value="">Selecione um profissional</option>
-                                                {professionals.map((professional) => (
-                                                    <option key={professional.id_usuario} value={professional.id_usuario}>{professional.nome}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="flex gap-1 flex-col">
-                                            <span className="text-xl text-gray-600 font-medium">Slot</span>
-                                            <select
-                                                name="slot"
-                                                value={formData.slot}
-                                                onChange={handleChange}
-                                                className="ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3"
-                                            >
-                                                <option value="Selecione um slot">Selecione um slot</option>
-                                                {columns.map((column) => (
-                                                    <option key={column.id_slot} value={column.id_slot}>{column.nome}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="flex gap-3">
-                                            <div className="flex gap-1 flex-col w-50">
-                                                <span className="text-xl text-gray-600 font-medium">Inicio</span>
-                                                <input
-                                                    type="time"
-                                                    name="inicio"
-                                                    value={formData.inicio}
-                                                    onChange={handleChange}
-                                                    className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-100 py-4 px-3"
-                                                />
-                                            </div>
-                                            <div className="flex gap-1 flex-col w-50">
-                                                <span className="text-xl text-gray-600 font-medium">Fim</span>
-                                                <input
-                                                    type="time"
-                                                    name="fim"
-                                                    value={formData.fim}
-                                                    onChange={handleChange}
-                                                    className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-100 py-4 px-3"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="flex gap-1 flex-col w-fix">
-                                            <span className="text-xl text-gray-600 font-medium">Data</span>
-                                            <input
-                                                type="date"
-                                                name="data"
-                                                value={formData.data}
-                                                onChange={handleChange}
-                                                className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-100 py-4 px-3"
-                                            />
-                                        </div>
-                                        <div className="flex gap-1 flex-col w-fix">
-                                            <span className="text-xl text-gray-600 font-medium">Status</span>
-                                            <fieldset className="flex w-fix gap-6 ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3">
-                                                <div className="flex gap-1 w-fix">
-                                                    <input
-                                                        type="radio"
-                                                        name="status"
-                                                        value="Agendado"
-                                                        checked={formData.status === "Agendado"}
-                                                        onChange={handleChange}
-                                                    />
-                                                    <span className="text-md text-gray-600 font-medium">Agendado</span>
-                                                </div>
-                                                <div className="flex gap-1 w-fix">
-                                                    <input
-                                                        type="radio"
-                                                        name="status"
-                                                        value="Presente"
-                                                        checked={formData.status === "Presente"}
-                                                        onChange={handleChange}
-                                                    />
-                                                    <span className="text-md text-gray-600 font-medium">Presente</span>
-                                                </div>
-                                                <div className="flex gap-1 w-fix">
-                                                    <input
-                                                        type="radio"
-                                                        name="status"
-                                                        value="Cancelado"
-                                                        checked={formData.status === "Cancelado"}
-                                                        onChange={handleChange}
-                                                    />
-                                                    <span className="text-md text-gray-600 font-medium">Cancelado</span>
-                                                </div>
-                                            </fieldset>
-                                        </div>
-                                        <div className="flex gap-1 flex-col w-fix">
-                                            <span className="text-xl text-gray-600 font-medium">Paciente Apollo?</span>
-                                            <fieldset className="flex w-fix gap-6 ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3">
-                                                <div className="flex gap-1 w-fix">
-                                                    <input
-                                                        type="radio"
-                                                        name="paciente_apollo"
-                                                        value="true"
-                                                        checked={formData.paciente_apollo === true}
-                                                        onChange={handleChange}
-                                                    />
-                                                    <span className="text-md text-gray-600 font-medium">Sim</span>
-                                                </div>
-                                                <div className="flex gap-1 w-fix">
-                                                    <input
-                                                        type="radio"
-                                                        name="paciente_apollo"
-                                                        value="false"
-                                                        checked={formData.paciente_apollo === false}
-                                                        onChange={handleChange}
-                                                    />
-                                                    <span className="text-md text-gray-600 font-medium">Não</span>
-                                                </div>
-                                            </fieldset>
-                                        </div>
-                                        <div className="flex gap-1 flex-col w-fix">
-                                            <span className="text-xl text-gray-600 font-medium">Criar em lote?</span>
-                                            <fieldset className="flex w-fix gap-6 ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3">
-                                                <div className="flex gap-1 w-fix">
-                                                    <input
-                                                        type="radio"
-                                                        name="em_lote"
-                                                        value="true"
-                                                        checked={formData.em_lote === true}
-                                                        onChange={handleChange}
-                                                    />
-                                                    <span className="text-md text-gray-600 font-medium">Sim</span>
-                                                </div>
-                                                <div className="flex gap-1 w-fix">
-                                                    <input
-                                                        type="radio"
-                                                        name="em_lote"
-                                                        value="false"
-                                                        checked={formData.em_lote === false}
-                                                        onChange={handleChange}
-                                                    />
-                                                    <span className="text-md text-gray-600 font-medium">Não</span>
-                                                </div>
-                                            </fieldset>
-                                        </div>
 
-                                        <button type="submit" className="w-full border bg-[#afd5a3] rounded-md text-md text-slate-600 font-medium p-2 shadow-sm hover:translate-y-[-4px] hover:bg-[#bdddc1] transition-all">
-                                            Adicionar
-                                        </button>
-                                    </form>
+                                <div className="flex gap-3 w-full justify-center">
+                                    <button className={`w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 focus:outline-none border-slate-200 ${isLocacao == null ? null : isLocacao ? null : "bg-slate-200"}`} onClick={() => setIsLocacao(false)}>Novo Agendamento</button>
+                                    <button className={`w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 focus:outline-none border-slate-200 ${isLocacao == null ? null : isLocacao ? "bg-slate-200" : null}`} onClick={() => setIsLocacao(true)}>Nova Locação</button>
                                 </div>
+
+                                {isLocacao == null ? null : isLocacao == false ? (
+                                    <div>
+                                        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                                            <div className="flex gap-1 flex-col">
+                                                <span className="text-xl text-gray-600 font-medium">Paciente</span>
+                                                <select
+                                                    name="paciente"
+                                                    value={agendamentoFormData.paciente}
+                                                    onChange={handleChangeAgendamento}
+                                                    className="ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3"
+                                                >
+                                                    <option value="">Selecione um paciente</option>
+                                                    {patients.map((patient) => (
+                                                        <option key={patient.id_paciente} value={patient.id_paciente}>{patient.nome}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div className="flex gap-1 flex-col">
+                                                <span className="text-xl text-gray-600 font-medium">Profissional</span>
+                                                <select
+                                                    name="profissional"
+                                                    value={agendamentoFormData.profissional}
+                                                    onChange={handleChangeAgendamento}
+                                                    className="ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3"
+                                                >
+                                                    <option value="">Selecione um profissional</option>
+                                                    {professionals.map((professional) => (
+                                                        <option key={professional.id_usuario} value={professional.id_usuario}>{professional.nome}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div className="flex gap-1 flex-col">
+                                                <span className="text-xl text-gray-600 font-medium">Slot</span>
+                                                <select
+                                                    name="slot"
+                                                    value={agendamentoFormData.slot}
+                                                    onChange={handleChangeAgendamento}
+                                                    className="ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3"
+                                                >
+                                                    <option value="Selecione um slot">Selecione um slot</option>
+                                                    {columns.map((column) => (
+                                                        <option key={column.id_slot} value={column.id_slot}>{column.nome}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div className="flex gap-3">
+                                                <div className="flex gap-1 flex-col w-50">
+                                                    <span className="text-xl text-gray-600 font-medium">Inicio</span>
+                                                    <input
+                                                        type="time"
+                                                        name="inicio"
+                                                        value={agendamentoFormData.inicio}
+                                                        onChange={handleChangeAgendamento}
+                                                        className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-100 py-4 px-3"
+                                                    />
+                                                </div>
+                                                <div className="flex gap-1 flex-col w-50">
+                                                    <span className="text-xl text-gray-600 font-medium">Fim</span>
+                                                    <input
+                                                        type="time"
+                                                        name="fim"
+                                                        value={agendamentoFormData.fim}
+                                                        onChange={handleChangeAgendamento}
+                                                        className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-100 py-4 px-3"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-1 flex-col w-fix">
+                                                <span className="text-xl text-gray-600 font-medium">Data</span>
+                                                <input
+                                                    type="date"
+                                                    name="data"
+                                                    value={agendamentoFormData.data}
+                                                    onChange={handleChangeAgendamento}
+                                                    className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-100 py-4 px-3"
+                                                />
+                                            </div>
+                                            <div className="flex gap-1 flex-col w-fix">
+                                                <span className="text-xl text-gray-600 font-medium">Status</span>
+                                                <fieldset className="flex w-fix gap-6 ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3">
+                                                    <div className="flex gap-1 w-fix">
+                                                        <input
+                                                            type="radio"
+                                                            name="status"
+                                                            value="Agendado"
+                                                            checked={agendamentoFormData.status === "Agendado"}
+                                                            onChange={handleChangeAgendamento}
+                                                        />
+                                                        <span className="text-md text-gray-600 font-medium">Agendado</span>
+                                                    </div>
+                                                    <div className="flex gap-1 w-fix">
+                                                        <input
+                                                            type="radio"
+                                                            name="status"
+                                                            value="Presente"
+                                                            checked={agendamentoFormData.status === "Presente"}
+                                                            onChange={handleChangeAgendamento}
+                                                        />
+                                                        <span className="text-md text-gray-600 font-medium">Presente</span>
+                                                    </div>
+                                                    <div className="flex gap-1 w-fix">
+                                                        <input
+                                                            type="radio"
+                                                            name="status"
+                                                            value="Cancelado"
+                                                            checked={agendamentoFormData.status === "Cancelado"}
+                                                            onChange={handleChangeAgendamento}
+                                                        />
+                                                        <span className="text-md text-gray-600 font-medium">Cancelado</span>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <div className="flex gap-1 flex-col w-fix">
+                                                <span className="text-xl text-gray-600 font-medium">Paciente Apollo?</span>
+                                                <fieldset className="flex w-fix gap-6 ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3">
+                                                    <div className="flex gap-1 w-fix">
+                                                        <input
+                                                            type="radio"
+                                                            name="paciente_apollo"
+                                                            value="true"
+                                                            checked={agendamentoFormData.paciente_apollo === true}
+                                                            onChange={handleChangeAgendamento}
+                                                        />
+                                                        <span className="text-md text-gray-600 font-medium">Sim</span>
+                                                    </div>
+                                                    <div className="flex gap-1 w-fix">
+                                                        <input
+                                                            type="radio"
+                                                            name="paciente_apollo"
+                                                            value="false"
+                                                            checked={agendamentoFormData.paciente_apollo === false}
+                                                            onChange={handleChangeAgendamento}
+                                                        />
+                                                        <span className="text-md text-gray-600 font-medium">Não</span>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <div className="flex gap-1 flex-col w-fix">
+                                                <span className="text-xl text-gray-600 font-medium">Criar em lote?</span>
+                                                <fieldset className="flex w-fix gap-6 ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3">
+                                                    <div className="flex gap-1 w-fix">
+                                                        <input
+                                                            type="radio"
+                                                            name="em_lote"
+                                                            value="true"
+                                                            checked={agendamentoFormData.em_lote === true}
+                                                            onChange={handleChangeAgendamento}
+                                                        />
+                                                        <span className="text-md text-gray-600 font-medium">Sim</span>
+                                                    </div>
+                                                    <div className="flex gap-1 w-fix">
+                                                        <input
+                                                            type="radio"
+                                                            name="em_lote"
+                                                            value="false"
+                                                            checked={agendamentoFormData.em_lote === false}
+                                                            onChange={handleChangeAgendamento}
+                                                        />
+                                                        <span className="text-md text-gray-600 font-medium">Não</span>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+
+                                            <button type="submit" className="w-full border bg-[#afd5a3] rounded-md text-md text-slate-600 font-medium p-2 shadow-sm hover:translate-y-[-4px] hover:bg-[#bdddc1] transition-all">
+                                                Adicionar
+                                            </button>
+                                        </form>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                                            <div className="flex gap-1 flex-col">
+                                                <span className="text-xl text-gray-600 font-medium">Profissional</span>
+                                                <select
+                                                    name="profissional"
+                                                    value={locacaoFormData.profissional}
+                                                    onChange={handleChangeLocacao}
+                                                    className="ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3"
+                                                >
+                                                    <option value="">Selecione um profissional</option>
+                                                    {professionals.map((professional) => (
+                                                        <option key={professional.id_usuario} value={professional.id_usuario}>{professional.nome}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div className="flex gap-1 flex-col">
+                                                <span className="text-xl text-gray-600 font-medium">Slot</span>
+                                                <select
+                                                    name="slot"
+                                                    value={locacaoFormData.slot}
+                                                    onChange={handleChangeLocacao}
+                                                    className="ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3"
+                                                >
+                                                    <option value="Selecione um slot">Selecione um slot</option>
+                                                    {columns.map((column) => (
+                                                        <option key={column.id_slot} value={column.id_slot}>{column.nome}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div className="flex gap-3">
+                                                <div className="flex gap-1 flex-col w-50">
+                                                    <span className="text-xl text-gray-600 font-medium">Inicio</span>
+                                                    <input
+                                                        type="time"
+                                                        name="inicio"
+                                                        value={locacaoFormData.inicio}
+                                                        onChange={handleChangeLocacao}
+                                                        className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-100 py-4 px-3"
+                                                    />
+                                                </div>
+                                                <div className="flex gap-1 flex-col w-50">
+                                                    <span className="text-xl text-gray-600 font-medium">Fim</span>
+                                                    <input
+                                                        type="time"
+                                                        name="fim"
+                                                        value={locacaoFormData.fim}
+                                                        onChange={handleChangeLocacao}
+                                                        className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-100 py-4 px-3"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-1 flex-col w-fix">
+                                                <span className="text-xl text-gray-600 font-medium">Data</span>
+                                                <input
+                                                    type="date"
+                                                    name="data"
+                                                    value={locacaoFormData.data}
+                                                    onChange={handleChangeLocacao}
+                                                    className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-100 py-4 px-3"
+                                                />
+                                            </div>
+                                            <div className="flex gap-1 flex-col w-fix">
+                                                <span className="text-xl text-gray-600 font-medium">Criar em lote?</span>
+                                                <fieldset className="flex w-fix gap-6 ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3">
+                                                    <div className="flex gap-1 w-fix">
+                                                        <input
+                                                            type="radio"
+                                                            name="em_lote"
+                                                            value="true"
+                                                            checked={locacaoFormData.em_lote === true}
+                                                            onChange={handleChangeLocacao}
+                                                        />
+                                                        <span className="text-md text-gray-600 font-medium">Sim</span>
+                                                    </div>
+                                                    <div className="flex gap-1 w-fix">
+                                                        <input
+                                                            type="radio"
+                                                            name="em_lote"
+                                                            value="false"
+                                                            checked={locacaoFormData.em_lote === false}
+                                                            onChange={handleChangeLocacao}
+                                                        />
+                                                        <span className="text-md text-gray-600 font-medium">Não</span>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            
+                                            <button type="submit" className="w-full border bg-[#afd5a3] rounded-md text-md text-slate-600 font-medium p-2 shadow-sm hover:translate-y-[-4px] hover:bg-[#bdddc1] transition-all">
+                                                Adicionar
+                                            </button>
+                                        </form>
+                                    </div>
+                                )}
                             </div>
                         </Dialog.Panel>
                     </div>

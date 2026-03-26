@@ -5,11 +5,14 @@ import {
 import React, { useEffect, useMemo, useState } from "react"
 import ModalAdicionar from "../modal/ModalAdicionar"
 import ModalAtualizar from "../modal/ModalAtualizar"
+import ModalExcluir from "../modal/ModalExcluir"
 import { MdOutlineExpandMore } from "react-icons/md";
 
 function CalendarioAdmin({ args }) {
     const {
         items = [], // Eventos a serem mostrados
+        containers = [],
+        tipo_aluguel = [],
         patients = [],
         professionals = [],
         columns = [], // Slots
@@ -51,15 +54,34 @@ function CalendarioAdmin({ args }) {
         return map
     }, [items, config])
 
+    const containerGrid = useMemo(() => {
+        const map = {}
+
+        containers.forEach(container => {
+            const timeKey = getHourSlot(container.inicio)
+            const key = `${container.slot}-${timeKey}`
+
+            if (!map[key]) map[key] = []
+            map[key].push(container)
+        })
+
+        return map
+    }, [containers])
+
     const [isAdicionarModalOpen, setIsAdicionarModalOpen] = useState(false)
-    const [isEditarModalOpen, setIsEditarModalOpen] = useState(false)
     const [isAtualizarModalOpen, setIsAtualizarModalOpen] = useState(false)
+    const [isExcluirModalOpen, setIsExcluirModalOpen] = useState(false)
 
     const [selectedEvent, setSelectedEvent] = useState({})
 
     const handleEventClick = (item) => {
         setSelectedEvent(item)
         setIsAtualizarModalOpen(true)
+    }
+
+    const handleLocacaoEventClick = (container) => {
+        setSelectedEvent(container)
+        setIsExcluirModalOpen(true)
     }
 
     return (
@@ -77,7 +99,7 @@ function CalendarioAdmin({ args }) {
             )}
 
             <div className="flex gap-4 w-full">
-                <button className="w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 focus:outline-none border-slate-200" onClick={() => setIsAdicionarModalOpen(true)}>Adicionar Consulta</button>
+                <button className="w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 focus:outline-none border-slate-200" onClick={() => setIsAdicionarModalOpen(true)}>Adicionar Agendamento ou Locação</button>
                 {/*<button className="w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 focus:outline-none border-slate-200" onClick={() => setIsEditarModalOpen(true)}>Editar Consulta</button>
                 <button className="w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 focus:outline-none border-slate-200" onClick={() => setIsAtualizarModalOpen(true)}>Remover Consulta</button>*/}
             </div>
@@ -108,6 +130,17 @@ function CalendarioAdmin({ args }) {
                                     const cellItems = gridData[`${col.id_slot}-${time}`] || []
                                     return (
                                         <td key={`${time}-${col.id_slot}`} className="p-0 border-r border-slate-200 align-top relative">
+                                            <div className="absolute inset-0 z-0 p-1">
+                                                {(containerGrid[`${col.id_slot}-${time}`] || []).map((container) => (
+                                                    <ContainerBlock
+                                                        key={container.id}
+                                                        container={container}
+                                                        isMinimalist={isMinimalist}
+                                                        config={config}
+                                                        onClickEvent={handleLocacaoEventClick}
+                                                    />
+                                                ))}
+                                            </div>
                                             <div className="absolute inset-x-0 top-0 z-10 p-1 flex gap-1">
                                                 {cellItems.map((item) => (
                                                     <EventCard
@@ -133,6 +166,8 @@ function CalendarioAdmin({ args }) {
                 isAdicionarModalOpen={isAdicionarModalOpen}
                 patients={patients}
                 professionals={professionals}
+                containers={containers}
+                tipo_aluguel={tipo_aluguel}
                 columns={columns}
             />
             <ModalAtualizar
@@ -141,6 +176,18 @@ function CalendarioAdmin({ args }) {
                 item={selectedEvent}
                 patients={patients}
                 professionals={professionals}
+                containers={containers}
+                tipo_aluguel={tipo_aluguel}
+                columns={columns}
+            />
+            <ModalExcluir
+                setIsExcluirModalOpen={setIsExcluirModalOpen}
+                isExcluirModalOpen={isExcluirModalOpen}
+                item={selectedEvent}
+                patients={patients}
+                professionals={professionals}
+                containers={containers}
+                tipo_aluguel={tipo_aluguel}
                 columns={columns}
             />
         </div>
@@ -250,24 +297,83 @@ const EventCard = ({ item, isMinimalist, config, onClickEvent }) => {
             {isExpanded ? (
                 <div style={styleHover} className={`absolute rounded w-full translate-y-[${offset}px] p-2`}>
                     <div className="flex justify-between w-full">
-                        <div className={`text-[10px] font-bold ${isMinimalist ? "text-slate-500" : "text-white" } mb-1`}>
+                        <div className={`text-[10px] font-bold ${isMinimalist ? "text-slate-500" : "text-white"} mb-1`}>
                             {formatTime(item[config.timeKey])} - {formatTime(item[config.endTime])}
                         </div>
                     </div>
-                    <div className={`text-xs font-semibold ${isMinimalist ? "text-slate-500" : "text-white" } line-clamp-1`}>
+                    <div className={`text-xs font-semibold ${isMinimalist ? "text-slate-500" : "text-white"} line-clamp-1`}>
                         {item.title || "Sem título"}
                     </div>
                     {item.subtitle && (
-                        <div className={`text-[10px] ${isMinimalist ? "text-slate-500" : "text-white" } italic truncate`}>
+                        <div className={`text-[10px] ${isMinimalist ? "text-slate-500" : "text-white"} italic truncate`}>
                             {item.subtitle}
                         </div>
                     )}
-                    <div className={`text-[10px] ${isMinimalist ? "text-slate-500" : "text-white" } italic truncate`}>
+                    <div className={`text-[10px] ${isMinimalist ? "text-slate-500" : "text-white"} italic truncate`}>
                         {item.paciente_apollo ? 'Apollo' : 'Particular'}
                     </div>
                 </div>
             ) : (<></>)}
         </>
+    )
+}
+
+const ContainerBlock = ({ container, isMinimalist, config, onClickEvent }) => {
+
+    /*const randomColor = () => {
+        const r = Math.floor(Math.random() * 256)
+        const g = Math.floor(Math.random() * 256)
+        const b = Math.floor(Math.random() * 256)
+        const a = 0.1 // transparência (0 = invisível, 1 = sólido)
+
+        return `rgba(${r}, ${g}, ${b}, ${a})`
+    }
+
+    const bg_color = randomColor()*/
+
+    const slotHeight = config.slotHeight || 70
+
+    const calculateHeight = () => {
+        if (!container.inicio || !container.fim) return slotHeight
+
+        const start = new Date(container.inicio)
+        const end = new Date(container.fim)
+        const duration = (end - start) / (1000 * 60)
+
+        return ((duration / 60) * slotHeight) - 8
+    }
+
+    const calculateOffset = () => {
+        if (!container.inicio) return 0
+
+        const start = new Date(container.inicio)
+        const minutes = start.getUTCMinutes()
+
+        return (minutes / 60) * slotHeight
+    }
+
+    const height = calculateHeight()
+    const offset = calculateOffset()
+
+    return (
+        
+        <div
+        
+            style={{
+                height: `${height}px`,
+                marginTop: `${offset}px`,
+                backgroundColor: /*bg_color*/isMinimalist ? "#ffffff" : "#f5f5f5",
+                border: "2px dashed #c1c1c1",
+                zIndex: 1
+            }}
+            className="w-full rounded-md"
+            onClick={() => onClickEvent(container)}
+        >
+            <div className="text-[11px] text-slate-500 p-1 flex justify-between px-2">
+                <p>Locação | {formatTime(container.inicio)} - {formatTime(container.fim)}</p>
+                <p>{container.profissional}</p>
+            </div>
+        </div>
     )
 }
 

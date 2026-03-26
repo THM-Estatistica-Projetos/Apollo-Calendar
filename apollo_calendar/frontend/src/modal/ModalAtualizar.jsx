@@ -18,6 +18,7 @@ function ModalAtualizar({
 
     const handleSubmit = () => {
         Streamlit.setComponentValue({
+            tipo: "agendamento",
             operacao: "Remove",
             id: item.id
         })
@@ -38,6 +39,7 @@ function ModalAtualizar({
     }
 
     const [formData, setFormData] = useState({
+        tipo: "agendamento",
         operacao: "Update",
         id: "",
         paciente: "",
@@ -63,6 +65,7 @@ function ModalAtualizar({
             // console.log("É Apollo:", isApollo, "Valor Bruto:", selectedPatient?.paciente_apollo);
 
             setFormData({
+                tipo: "agendamento",
                 operacao: "Update",
                 id: item.id,
                 paciente: selectedPatient?.id_paciente || "",

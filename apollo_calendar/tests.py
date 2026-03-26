@@ -52,7 +52,7 @@ data_str = st.session_state.data.strftime("%Y-%m-%d")
 
 st.set_page_config(layout="wide")
 
-def apollo_calendar(items, patients, professionals, columns, time_slots=None, config=None, key=None, acesso="", paciente_apollo=False):
+def apollo_calendar(items, containers, tipo_aluguel, patients, professionals, columns, time_slots=None, config=None, key=None, acesso="", paciente_apollo=False):
     """
     items: Lista de dicionários formatados
     columns: Lista de strings ou dicts [{"id": "C1", "title": "Consultório 1"}]
@@ -64,6 +64,8 @@ def apollo_calendar(items, patients, professionals, columns, time_slots=None, co
         
     return _apollo_calendar(
         items=items,
+        containers=containers,
+        tipo_aluguel=tipo_aluguel,
         patients=patients,
         professionals=professionals,
         columns=columns,
@@ -84,6 +86,7 @@ def format_data_for_calendar(raw_data):
         
         formatted.append({
             "id": item.get("id"),
+            "container_id": item.get("container_id"),
             "title": "RESERVADO" if nome == "ADM/TEMP" else nome,
             "subtitle": item.get("profissional", {}).get("usuario", {}).get("nome", ""),
             "startTime": item.get("inicio"), # ISO String
@@ -121,6 +124,7 @@ professionals = [
 db_fake_raw = [
     {
         "id": 1,
+        "container_id": 1,
         "inicio": f"{st.session_state.data.strftime('%Y-%m-%d')}T09:00:00.000Z",
         "fim": f"{st.session_state.data.strftime('%Y-%m-%d')}T10:00:00.000Z",
         "slot": {"id_slot": 1},
@@ -130,6 +134,7 @@ db_fake_raw = [
     },
     {
         "id": 2,
+        "container_id": 2,
         "inicio": f"{st.session_state.data.strftime('%Y-%m-%d')}T08:30:00.000Z",
         "fim": f"{st.session_state.data.strftime('%Y-%m-%d')}T09:00:00.000Z",
         "slot": {"id_slot": 2},
@@ -139,6 +144,7 @@ db_fake_raw = [
     },
     {
         "id": 3,
+        "container_id": 3,
         "inicio": f"{st.session_state.data.strftime('%Y-%m-%d')}T10:00:00.000Z",
         "fim": f"{st.session_state.data.strftime('%Y-%m-%d')}T10:30:00.000Z",
         "slot": {"id_slot": 1},
@@ -148,6 +154,7 @@ db_fake_raw = [
     },
     {
         "id": 4,
+        "container_id": 4,
         "inicio": f"{st.session_state.data.strftime('%Y-%m-%d')}T13:00:00.000Z",
         "fim": f"{st.session_state.data.strftime('%Y-%m-%d')}T16:00:00.000Z",
         "slot": {"id_slot": 2},
@@ -158,6 +165,7 @@ db_fake_raw = [
     },
     {
         "id": 5,
+        "container_id": 5,
         "inicio": f"{st.session_state.data.strftime('%Y-%m-%d')}T13:30:00.000Z",
         "fim": f"{st.session_state.data.strftime('%Y-%m-%d')}T18:00:00.000Z",
         "slot": {"id_slot": 3},
@@ -167,6 +175,7 @@ db_fake_raw = [
     },
     {
         "id": 6,
+        "container_id": 6,
         "inicio": f"{st.session_state.data.strftime('%Y-%m-%d')}T16:00:00.000Z",
         "fim": f"{st.session_state.data.strftime('%Y-%m-%d')}T18:00:00.000Z",
         "slot": {"id_slot": 4},
@@ -174,6 +183,63 @@ db_fake_raw = [
         "paciente": {"id_paciente": 106, "nome": "Juliana Rocha", "cor": "#172531"},
         "profissional": {"usuario": {"nome": "Dr. Marcos"}}
     }
+]
+
+containers = [
+    {
+        "id": 1,
+        "inicio": f"{data_str}T08:00:00.000Z",
+        "fim": f"{data_str}T12:00:00.000Z",
+        "slot": "1",
+        "tipo_aluguel": "Sala cheia",
+        "profissional": "Tiago",
+        "em_lote": False,
+        "color": "#ff9100"
+    },
+    {
+        "id": 2,
+        "inicio": f"{data_str}T09:30:00.000Z",
+        "fim": f"{data_str}T11:30:00.000Z",
+        "slot": "2",
+        "tipo_aluguel": "Período manhã",
+        "profissional": "Ronney",
+        "em_lote": False,
+        "color": "#cbd5f5"
+    },
+    {
+        "id": 3,
+        "inicio": f"{data_str}T13:00:00.000Z",
+        "fim": f"{data_str}T18:00:00.000Z",
+        "slot": "3",
+        "tipo_aluguel": "Período tarde",
+        "profissional": "Eduardo",
+        "em_lote": True,
+        "color": "#bbf7d0"
+    },
+    {
+        "id": 4,
+        "inicio": f"{data_str}T07:00:00.000Z",
+        "fim": f"{data_str}T19:00:00.000Z",
+        "slot": "4",
+        "tipo_aluguel": "Dia inteiro",
+        "profissional": "Alice",
+        "em_lote": False,
+        "color": "#fde68a"
+    },
+    {
+        "id": 5,
+        "inicio": f"{data_str}T10:15:00.000Z",
+        "fim": f"{data_str}T14:45:00.000Z",
+        "slot": "5",
+        "tipo_aluguel": "Custom",
+        "profissional": "Tiago",
+        "em_lote": False,
+        "color": "#fca5a5"
+    }
+]
+
+tipo_aluguel = [
+    
 ]
 
 patients = [
@@ -223,7 +289,9 @@ paciente_apollo_default = st.toggle("Paciente Apollo padrao?", value=False)
 #)
 
 resultado = apollo_calendar(
-    items=items, 
+    items=items,
+    containers=containers,
+    tipo_aluguel=tipo_aluguel,
     patients=patients,
     professionals=professionals,
     columns=headers,
@@ -238,6 +306,5 @@ resultado = apollo_calendar(
     key="2",
     acesso="Admin"
 )
-
 
 st.write(resultado)

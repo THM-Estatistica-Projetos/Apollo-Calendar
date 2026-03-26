@@ -8,6 +8,8 @@ import { MdOutlineExpandMore } from "react-icons/md";
 function AgendaMedico({ args }) {
     const {
         items = [], // Eventos a serem mostrados
+        container = [],
+        tipo_aluguel = [],
         patients = [],
         professionals = [],
         columns = [], // Slots

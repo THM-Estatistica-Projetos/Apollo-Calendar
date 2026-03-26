@@ -10,6 +10,8 @@ function ApolloCalendar({ args }) {
 
     const {
         items = [], // Eventos a serem mostrados
+        containers = [],
+        tipo_aluguel = [],
         patients = [],
         professionals = [],
         columns = [], // Slots
