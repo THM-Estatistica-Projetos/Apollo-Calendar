@@ -30,6 +30,7 @@ function ModalAdicionar({
         inicio: "",
         fim: "",
         data: hoje,
+        data_referencia: hoje,
         status: "Agendado",
         paciente_apollo: false,
         em_lote: false,
@@ -43,6 +44,7 @@ function ModalAdicionar({
         tipo_aluguel: "",
         recorrencia: null,
         data_locacao: hoje,
+        data_referencia: hoje,
         inicio: "",
         fim: "",
         em_lote: false,
@@ -138,6 +140,18 @@ function ModalAdicionar({
                                                     </div>
                                                 </fieldset>
                                             </div>
+                                            {agendamentoFormData.em_lote ? (
+                                            <div className="flex gap-1 flex-col w-fix ml-10">
+                                                <span className="text-xl text-gray-600 font-medium">Até quando?</span>
+                                                <input
+                                                    type="date"
+                                                    name="data_referencia"
+                                                    value={agendamentoFormData.data_referencia}
+                                                    onChange={handleChangeAgendamento}
+                                                    className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-200 py-4 px-3"
+                                                />
+                                            </div>
+                                            ) : null}
                                             <div className="flex gap-1 flex-col">
                                                 <span className="text-xl text-gray-600 font-medium">Paciente</span>
                                                 <select
@@ -305,6 +319,18 @@ function ModalAdicionar({
                                                     </div>
                                                 </fieldset>
                                             </div>
+                                            {locacaoFormData.em_lote ? (
+                                            <div className="flex gap-1 flex-col w-fix ml-10">
+                                                <span className="text-xl text-gray-600 font-medium">Até quando?</span>
+                                                <input
+                                                    type="date"
+                                                    name="data_referencia"
+                                                    value={locacaoFormData.data_referencia}
+                                                    onChange={handleChangeLocacao}
+                                                    className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-200 py-4 px-3"
+                                                />
+                                            </div>
+                                            ) : null}
                                             <div className="flex gap-1 flex-col">
                                                 <span className="text-xl text-gray-600 font-medium">Profissional</span>
                                                 <select
