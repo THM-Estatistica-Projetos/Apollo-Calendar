@@ -77,7 +77,7 @@ function ModalAtualizarLocacao({
                 tipo: "locacao",
                 operacao: "Update",
                 id: item.id,
-                profissional: professionals.find(p => p.nome === item.subtitle)?.id_usuario || "",
+                profissional: professionals.find(p => p.nome === item.profissional)?.id_usuario || "",
                 slot: item.slot,
                 tipo_aluguel: item.tipo_aluguel,
                 recorrencia: item.recorrencia,

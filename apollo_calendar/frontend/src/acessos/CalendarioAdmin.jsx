@@ -75,11 +75,13 @@ function CalendarioAdmin({ args }) {
     const [selectedEvent, setSelectedEvent] = useState({})
 
     const handleEventClick = (item) => {
+        console.log(item)
         setSelectedEvent(item)
         setIsAtualizarModalOpen(true)
     }
 
     const handleLocacaoEventClick = (container) => {
+        console.log(container)
         setSelectedEvent(container)
         setIsAtualizarLocacaoModalOpen(true)
     }

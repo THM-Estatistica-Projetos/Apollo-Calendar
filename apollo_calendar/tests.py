@@ -184,7 +184,7 @@ db_fake_raw = [
         "slot": {"id_slot": 4},
         "paciente_apollo": False,
         "paciente": {"id_paciente": 106, "nome": "Juliana Rocha", "cor": "#172531"},
-        "profissional": {"usuario": {"nome": "Dr. Marcos"}},
+        "profissional": {"usuario": {"nome": "Tiago"}},
         "em_lote": True
     }
 ]
