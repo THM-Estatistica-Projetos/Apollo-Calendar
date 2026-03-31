@@ -67,6 +67,12 @@ function ModalAtualizarLocacao({
         em_lote: "",
     })
 
+    const sortAlfabetical = (options) => {
+        return [...options].sort((a, b) =>
+            a.nome.localeCompare(b.nome, "pt-BR", { sensitivity: "base" })
+        )
+    }
+
     useEffect(() => {
         if (item && isAtualizarLocacaoModalOpen) {
 
@@ -176,7 +182,7 @@ function ModalAtualizarLocacao({
                                             className="ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3"
                                         >
                                             <option value="">Selecione um profissional</option>
-                                            {professionals.map((professional) => (
+                                            {sortAlfabetical(professionals).map((professional) => (
                                                 <option key={professional.id_usuario} value={professional.id_usuario}>{professional.nome}</option>
                                             ))}
                                         </select>

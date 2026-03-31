@@ -93,6 +93,12 @@ function ModalAdicionar({
         }
     }
 
+    const sortAlfabetical = (options) => {
+        return [...options].sort((a, b) =>
+            a.nome.localeCompare(b.nome, "pt-BR", { sensitivity: "base" })
+        )
+    }
+
     return (
         <>
             <Transition appear show={isAdicionarModalOpen} as={Fragment}>
@@ -141,16 +147,16 @@ function ModalAdicionar({
                                                 </fieldset>
                                             </div>
                                             {agendamentoFormData.em_lote ? (
-                                            <div className="flex gap-1 flex-col w-fix ml-10">
-                                                <span className="text-xl text-gray-600 font-medium">Até quando?</span>
-                                                <input
-                                                    type="date"
-                                                    name="data_referencia"
-                                                    value={agendamentoFormData.data_referencia}
-                                                    onChange={handleChangeAgendamento}
-                                                    className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-200 py-4 px-3"
-                                                />
-                                            </div>
+                                                <div className="flex gap-1 flex-col w-fix ml-10">
+                                                    <span className="text-xl text-gray-600 font-medium">Até quando?</span>
+                                                    <input
+                                                        type="date"
+                                                        name="data_referencia"
+                                                        value={agendamentoFormData.data_referencia}
+                                                        onChange={handleChangeAgendamento}
+                                                        className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-200 py-4 px-3"
+                                                    />
+                                                </div>
                                             ) : null}
                                             <div className="flex gap-1 flex-col">
                                                 <span className="text-xl text-gray-600 font-medium">Paciente</span>
@@ -161,7 +167,7 @@ function ModalAdicionar({
                                                     className="ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3"
                                                 >
                                                     <option value="">Selecione um paciente</option>
-                                                    {patients.map((patient) => (
+                                                    {sortAlfabetical(patients).map((patient) => (
                                                         <option key={patient.id_paciente} value={patient.id_paciente}>{patient.nome}</option>
                                                     ))}
                                                 </select>
@@ -175,7 +181,7 @@ function ModalAdicionar({
                                                     className="ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3"
                                                 >
                                                     <option value="">Selecione um profissional</option>
-                                                    {professionals.map((professional) => (
+                                                    {sortAlfabetical(professionals).map((professional) => (
                                                         <option key={professional.id_usuario} value={professional.id_usuario}>{professional.nome}</option>
                                                     ))}
                                                 </select>
@@ -320,16 +326,16 @@ function ModalAdicionar({
                                                 </fieldset>
                                             </div>
                                             {locacaoFormData.em_lote ? (
-                                            <div className="flex gap-1 flex-col w-fix ml-10">
-                                                <span className="text-xl text-gray-600 font-medium">Até quando?</span>
-                                                <input
-                                                    type="date"
-                                                    name="data_referencia"
-                                                    value={locacaoFormData.data_referencia}
-                                                    onChange={handleChangeLocacao}
-                                                    className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-200 py-4 px-3"
-                                                />
-                                            </div>
+                                                <div className="flex gap-1 flex-col w-fix ml-10">
+                                                    <span className="text-xl text-gray-600 font-medium">Até quando?</span>
+                                                    <input
+                                                        type="date"
+                                                        name="data_referencia"
+                                                        value={locacaoFormData.data_referencia}
+                                                        onChange={handleChangeLocacao}
+                                                        className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-200 py-4 px-3"
+                                                    />
+                                                </div>
                                             ) : null}
                                             <div className="flex gap-1 flex-col">
                                                 <span className="text-xl text-gray-600 font-medium">Profissional</span>
@@ -340,7 +346,7 @@ function ModalAdicionar({
                                                     className="ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3"
                                                 >
                                                     <option value="">Selecione um profissional</option>
-                                                    {professionals.map((professional) => (
+                                                    {sortAlfabetical(professionals).map((professional) => (
                                                         <option key={professional.id_usuario} value={professional.id_usuario}>{professional.nome}</option>
                                                     ))}
                                                 </select>
