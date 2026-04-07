@@ -86,6 +86,9 @@ function CalendarioAdmin({ args }) {
         setIsAtualizarLocacaoModalOpen(true)
     }
 
+    const [showAgendamentos, setShowAgendamentos] = useState(true)
+    const [showLocacoes, setShowLocacoes] = useState(true)
+
     return (
         <div className="font-sans text-slate-900">
             {config.showToggle && (
@@ -105,6 +108,25 @@ function CalendarioAdmin({ args }) {
                 {/*<button className="w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 focus:outline-none border-slate-200" onClick={() => setIsEditarModalOpen(true)}>Editar Consulta</button>
                 <button className="w-full px-10 py-2 rounded-xl my-3 content-center border text-slate-500 focus:outline-none border-slate-200" onClick={() => setIsAtualizarModalOpen(true)}>Remover Consulta</button>*/}
             </div>
+
+            <div className="flex w-full gap-2 mb-3">
+                <div className="flex w-20 items-center justify-between px-3 py-3 gap-2 bg-slate-200 rounded-l-xl border border-slate-300">
+                    <h3>Filtros</h3>
+                </div>
+                <div className="flex w-full justify-end px-3 py-3 gap-2 bg-slate-50 rounded-r-xl border border-slate-100">
+                    <div className="flex gap-3">
+                        <div className="gap-1 flex">
+                            <input type="checkbox" checked={showLocacoes} onChange={(e) => setShowLocacoes(e.target.checked)}/><p>Locações</p>
+                        </div>
+                        <div className="gap-1 flex">
+                            <input type="checkbox" checked={showAgendamentos} onChange={(e) => setShowAgendamentos(e.target.checked)}/><p>Agendamentos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {console.log("agendamentos", showAgendamentos)}
+            {console.log("locacoes", showLocacoes)}
 
             <div className="w-full overflow-x-auto bg-white rounded-xl shadow-sm border border-slate-200">
                 <table className="table-auto min-w-full border-collapse">
@@ -133,7 +155,7 @@ function CalendarioAdmin({ args }) {
                                     return (
                                         <td key={`${time}-${col.id_slot}`} className="p-0 border-r border-slate-200 align-top relative">
                                             <div className="absolute inset-0 z-0 p-1">
-                                                {(containerGrid[`${col.id_slot}-${time}`] || []).map((container) => (
+                                                {showLocacoes ? (containerGrid[`${col.id_slot}-${time}`] || []).map((container) => (
                                                     <ContainerBlock
                                                         key={container.id}
                                                         container={container}
@@ -141,10 +163,10 @@ function CalendarioAdmin({ args }) {
                                                         config={config}
                                                         onClickEvent={handleLocacaoEventClick}
                                                     />
-                                                ))}
+                                                )) : null}
                                             </div>
                                             <div className="absolute inset-x-0 top-0 z-10 p-1 flex gap-1">
-                                                {cellItems.map((item) => (
+                                                {showAgendamentos ? (cellItems.map((item) => (
                                                     <EventCard
                                                         key={item[config.primaryKey]}
                                                         item={item}
@@ -152,7 +174,7 @@ function CalendarioAdmin({ args }) {
                                                         config={config}
                                                         onClickEvent={handleEventClick}
                                                     />
-                                                ))}
+                                                ))) : null}
                                             </div>
                                         </td>
                                     )
@@ -358,9 +380,9 @@ const ContainerBlock = ({ container, isMinimalist, config, onClickEvent }) => {
     const offset = calculateOffset()
 
     return (
-        
+
         <div
-        
+
             style={{
                 height: `${height}px`,
                 marginTop: `${offset}px`,
