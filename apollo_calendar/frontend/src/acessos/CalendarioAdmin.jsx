@@ -8,6 +8,8 @@ import ModalAtualizar from "../modal/ModalAtualizar"
 import ModalAtualizarLocacao from "../modal/ModalAtualizarLocacao"
 import { MdOutlineExpandMore } from "react-icons/md";
 
+import Logo from "../assets/img/logo.png";
+
 function CalendarioAdmin({ args }) {
     const {
         items = [], // Eventos a serem mostrados
@@ -268,6 +270,11 @@ const EventCard = ({ item, isMinimalist, config, onClickEvent }) => {
 
     return (
         <>
+            {item.paciente_apollo === true ? (
+            <div className={`w-7 px-1 flex items-center bg-[${color}] rounded`}>
+                <img src={Logo} alt="Logo" className="bg-white rounded-full"/>
+            </div>
+            ) : null}
             {height < 62 ? (
                 <div onClick={() => onClickEvent(item)}
                     style={style}

@@ -180,9 +180,9 @@ db_fake_raw = [
         "id": 6,
         "container_id": 6,
         "inicio": f"{st.session_state.data.strftime('%Y-%m-%d')}T16:00:00.000Z",
-        "fim": f"{st.session_state.data.strftime('%Y-%m-%d')}T18:00:00.000Z",
+        "fim": f"{st.session_state.data.strftime('%Y-%m-%d')}T16:30:00.000Z",
         "slot": {"id_slot": 4},
-        "paciente_apollo": False,
+        "paciente_apollo": True,
         "paciente": {"id_paciente": 106, "nome": "Juliana Rocha", "cor": "#172531"},
         "profissional": {"usuario": {"nome": "Tiago"}},
         "em_lote": True
