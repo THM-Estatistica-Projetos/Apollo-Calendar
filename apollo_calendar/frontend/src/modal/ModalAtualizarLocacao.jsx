@@ -191,14 +191,14 @@ function ModalAtualizarLocacao({
                                         </select>
                                     </div>
                                     <div className="flex gap-1 flex-col">
-                                        <span className="text-xl text-gray-600 font-medium">Tipo de Aluguel</span>
+                                        <span className="text-xl text-gray-600 font-medium">Tipo de Locação</span>
                                         <select
                                             name="tipo_aluguel"
                                             value={formData.tipo_aluguel}
                                             onChange={handleChange}
                                             className="ml-3 w-fix rounded focus:outline-none p-2 bg-slate-100 py-3 px-3"
                                         >
-                                            <option value="">Selecione um tipo de aluguel</option>
+                                            <option value="">Selecione um tipo de locação</option>
                                             {tipo_aluguel.map((tipo_aluguel) => (
                                                 <option key={tipo_aluguel.id_tipo_aluguel} value={tipo_aluguel.id_tipo_aluguel}>{tipo_aluguel.nome_tipo}</option>
                                             ))}
