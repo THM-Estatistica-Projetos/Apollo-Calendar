@@ -271,7 +271,7 @@ const EventCard = ({ item, isMinimalist, config, onClickEvent }) => {
     return (
         <>
             {item.paciente_apollo === true ? (
-            <div className={`w-7 px-1 flex items-center bg-[${color}] rounded`}>
+            <div className={`w-7 px-1 flex items-center bg-[${color}] rounded mt-[${calculateOffset()}px]`}>
                 <img src={Logo} alt="Logo" className="bg-white rounded-full"/>
             </div>
             ) : null}
