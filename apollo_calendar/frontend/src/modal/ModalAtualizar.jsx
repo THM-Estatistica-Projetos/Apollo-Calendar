@@ -80,7 +80,8 @@ function ModalAtualizar({
         inicio: "",
         fim: "",
         status: "",
-        paciente_apollo: ""
+        paciente_apollo: "",
+        observacao: ""
     })
 
     const sortAlfabetical = (options) => {
@@ -113,7 +114,8 @@ function ModalAtualizar({
                 fim: item.endTime.slice(11, 16),
                 status: item.status || "",
                 paciente_apollo: item.paciente_apollo || false,
-                em_lote: item.em_lote || false
+                em_lote: item.em_lote || false,
+                observacao: item.observacao || ""
             })
 
             // console.log("Form data:", formData)
@@ -146,7 +148,8 @@ function ModalAtualizar({
             fim_hora: formData.fim,
             status: formData.status,
             paciente_apollo: formData.paciente_apollo,
-            em_lote: formData.em_lote
+            em_lote: formData.em_lote,
+            observacao: formData.observacao
         })
 
         setIsAtualizarModalOpen(false)
@@ -331,10 +334,20 @@ function ModalAtualizar({
                                             </div>
                                         </fieldset>
                                     </div>
+                                    <div className="flex gap-1 flex-col">
+                                        <span className="text-xl text-gray-600 font-medium">Observação</span>
+                                        <textarea
+                                            name="observacao"
+                                            value={formData.observacao}
+                                            onChange={handleChange}
+                                            rows={3}
+                                            className="ml-3 rounded bg-slate-100 py-3 px-3 w-full resize-none"
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="w-full flex gap-3">
-                                    <button className="w-fuit px-3 border bg-[#09a7a7] rounded-md text-md text-slate-50 font-medium p-2 shadow-sm hover:translate-y-[-4px] hover:bg-[#10c2c2] transition-all active:outline-none" onClick={() => setIsAtualizarModalOpen(false)}><FaArrowLeft /></button>
+                                    <button className="w-full px-3 border bg-[#09a7a7] rounded-md text-md text-slate-50 font-medium p-2 shadow-sm hover:translate-y-[-4px] hover:bg-[#10c2c2] transition-all active:outline-none" onClick={() => setIsAtualizarModalOpen(false)}><FaArrowLeft /></button>
                                     <button className="w-full border bg-[#106ce4] rounded-md text-md text-slate-50 font-medium p-2 shadow-sm hover:translate-y-[-4px] hover:bg-[#2078eb] transition-all active:outline-none" onClick={handleUpdate}>Editar</button>
                                 </div>
                             </div>
