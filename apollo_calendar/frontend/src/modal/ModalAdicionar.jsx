@@ -35,6 +35,7 @@ function ModalAdicionar({
         status: "Agendado",
         paciente_apollo: false,
         em_lote: false,
+        observacao: "",
     }
 
     const initialLocacaoFormData = {
@@ -292,6 +293,16 @@ function ModalAdicionar({
                                                         <span className="text-md text-gray-600 font-medium">Não</span>
                                                     </div>
                                                 </fieldset>
+                                            </div>
+                                            <div className="flex gap-1 flex-col">
+                                                <span className="text-xl text-gray-600 font-medium">Observação</span>
+                                                <textarea
+                                                    name="observacao"
+                                                    value={agendamentoFormData.observacao}
+                                                    onChange={handleChangeAgendamento}
+                                                    rows={3}
+                                                    className="ml-3 rounded bg-slate-100 py-3 px-3 w-full resize-none"
+                                                />
                                             </div>
                                             <button type="submit" className="w-full border bg-[#afd5a3] rounded-md text-md text-slate-600 font-medium p-2 shadow-sm hover:translate-y-[-4px] hover:bg-[#bdddc1] transition-all">
                                                 Adicionar
