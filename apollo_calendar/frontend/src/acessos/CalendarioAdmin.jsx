@@ -139,7 +139,7 @@ function CalendarioAdmin({ args }) {
                             </th>
                             {columns.map((col) => (
                                 <th key={col.id_slot} className="p-4 text-sm font-bold text-slate-700 border-r border-slate-200 text-left whitespace-nowrap">
-                                    {col.nome}
+                                    {col.nome ? col.nome : col.sigla}
                                 </th>
                             ))}
                         </tr>

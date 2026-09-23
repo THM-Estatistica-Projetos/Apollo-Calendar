@@ -267,9 +267,13 @@ function ModalAtualizar({
                                         <span className="text-xl text-gray-600 font-medium whitespace-nowrap flex-shrink-0">
                                             Data:
                                         </span>
-                                        <p className="ml-3 flex-1 rounded bg-slate-100 py-3 px-3">
-                                            {formatDate(item.startTime)}
-                                        </p>
+                                        <input
+                                                type="date"
+                                                name="data"
+                                                value={formData.data}
+                                                onChange={handleChange}
+                                                className="ml-3 w-fix h-3 rounded focus:outline-none p-2 bg-slate-100 py-4 px-3"
+                                            />
                                     </div>
                                     <div className="flex gap-1 flex-col w-fix">
                                         <span className="text-xl text-gray-600 font-medium">Status</span>
